@@ -13,7 +13,37 @@ export class UserService {
   ) {}
 
   findAll(query: IGetUserDTO) {
-    return this.userRepository.find();
+    const { limit: take = 10, page, username, gender, role } = query;
+    const skip = ((page || 1) - 1) * take;
+    return this.userRepository.find({
+      select: {
+        id: true,
+        username: true,
+        profile: {
+          photo: true,
+          gender: true,
+          address: true,
+        },
+        roles: {
+          name: true,
+        },
+      },
+      relations: {
+        profile: true,
+        roles: true,
+      },
+      where: {
+        username,
+        profile: {
+          gender,
+        },
+        roles: {
+          id: role,
+        },
+      },
+      take,
+      skip,
+    });
   }
 
   find(username: string) {

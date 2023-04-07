@@ -1,7 +1,7 @@
 export interface IGetUserDTO {
   username?: string;
   gender?: number;
-  role?: string;
+  role?: number;
   page: number;
   limit?: number;
 }
