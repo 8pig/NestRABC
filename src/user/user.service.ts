@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { Logs } from '../logs/logs.entity';
+import { IGetUserDTO } from './DTO/user.dto';
 
 @Injectable()
 export class UserService {
@@ -11,7 +12,7 @@ export class UserService {
     @InjectRepository(Logs) private readonly logsRepository: Repository<Logs>,
   ) {}
 
-  findAll() {
+  findAll(query: IGetUserDTO) {
     return this.userRepository.find();
   }
 

@@ -6,11 +6,13 @@ import {
   Post,
   Inject,
   LoggerService,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config';
 import { User } from './user.entity';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { IGetUserDTO } from './DTO/user.dto';
 
 @Controller('user')
 export class UserController {
@@ -26,11 +28,9 @@ export class UserController {
   }
 
   @Get()
-  getUsers(): any {
-    this.logger.log(`请求getUsers成功`);
-    this.logger.warn(`请求getUsers成功`);
-    this.logger.error(`请求getUsers成功`);
-    return this.userService.findAll();
+  getUsers(@Query() query: IGetUserDTO): any {
+    console.log(query);
+    return this.userService.findAll(query);
     // return this.userService.getUsers();
   }
 
@@ -56,7 +56,8 @@ export class UserController {
   }
 
   @Get('/profile')
-  getUserProfile(): any {
+  getUserProfile(@Query() query): any {
+    // username gender role profile sort
     return this.userService.findProfile(2);
   }
 
