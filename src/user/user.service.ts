@@ -15,35 +15,63 @@ export class UserService {
   findAll(query: IGetUserDTO) {
     const { limit: take = 10, page, username, gender, role } = query;
     const skip = ((page || 1) - 1) * take;
-    return this.userRepository.find({
-      select: {
-        id: true,
-        username: true,
-        profile: {
-          photo: true,
-          gender: true,
-          address: true,
-        },
-        roles: {
-          name: true,
-        },
-      },
-      relations: {
-        profile: true,
-        roles: true,
-      },
-      where: {
-        username,
-        profile: {
-          gender,
-        },
-        roles: {
-          id: role,
-        },
-      },
-      take,
-      skip,
-    });
+    const qb = this.userRepository
+      .createQueryBuilder('user')
+      .innerJoinAndSelect('user.profile', 'profile')
+      .innerJoinAndSelect('user.roles', 'roles');
+    if (username) {
+      qb.where('user.username = :username', { username });
+    } else {
+      qb.where('user.username IS NOT NULL');
+    }
+    if (gender) {
+      qb.where('profile.gender = :gender', { gender });
+    } else {
+      qb.where('profile.gender IS NOT NULL');
+    }
+    if (role) {
+      qb.where('roles.id = :role', { role });
+    } else {
+      qb.where('roles.id IS NOT NULL');
+    }
+    return qb.getMany();
+    // .where('user.username = :username', { username })
+    // .andWhere('profile.gender = :gender', { gender })
+    // .andWhere('roles.id = :role', { role })
+    // .getMany();
+
+    // const { limit: take = 10, page, username, gender, role } = query;
+    // const skip = ((page || 1) - 1) * take;
+    // return this.userRepository.find({
+    //   select: {
+    //     id: true,
+    //     username: true,
+    //     profile: {
+    //       photo: true,
+    //       gender: true,
+    //       address: true,
+    //     },
+    //     roles: {
+    //       id: true,
+    //       name: true,
+    //     },
+    //   },
+    //   relations: {
+    //     profile: true,
+    //     roles: true,
+    //   },
+    //   where: {
+    //     username,
+    //     profile: {
+    //       gender,
+    //     },
+    //     roles: {
+    //       id: role,
+    //     },
+    //   },
+    //   take,
+    //   skip,
+    // });
   }
 
   find(username: string) {
