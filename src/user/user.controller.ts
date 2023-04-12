@@ -9,6 +9,7 @@ import {
   Query,
   UseFilters,
   Body,
+  Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config';
@@ -45,18 +46,16 @@ export class UserController {
     // return this.userService.addUser();
     return this.userService.create(user);
   }
-  @Patch()
-  updateUser(): any {
-    // todo 传递参数id
-    // todo 异常处理
-    const user = { username: 'newname' } as User;
+  @Patch('/:id')
+  updateUser(@Body() dto: any, @Param('id') id: number): any {
+    const user = <User>dto;
     return this.userService.update(1, user);
   }
 
-  @Delete()
-  deleteUser(): any {
+  @Delete('/:id')
+  removeUser(@Param('id') id: number): any {
     // todo 传递参数id
-    return this.userService.remove(1);
+    return this.userService.remove(id);
   }
 
   @Get('/profile')
