@@ -31,11 +31,7 @@ export class AllExceptionFilter implements ExceptionFilter {
     // 加入更多异常错误逻辑
     if (exception instanceof QueryFailedError) {
       msg = exception.message;
-      if (exception.driverError.errno === 1062) {
-        msg = '唯一索引冲突, 已存在.';
-      }
     }
-
     const responseBody = {
       headers: request.headers,
       query: request.query,

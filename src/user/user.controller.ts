@@ -7,14 +7,18 @@ import {
   Inject,
   LoggerService,
   Query,
+  UseFilters,
+  Body,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config';
 import { User } from './user.entity';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { IGetUserDTO } from './DTO/user.dto';
+import { TypeormFilter } from '../filters/typeorm.filter';
 
 @Controller('user')
+@UseFilters(new TypeormFilter())
 export class UserController {
   // private logger = new Logger(UserController.name);
 
@@ -35,9 +39,9 @@ export class UserController {
   }
 
   @Post()
-  addUser(): any {
+  addUser(@Body() user: User): any {
     // todo 解析Body参数
-    const user = { username: 'toimc', password: '123456' } as User;
+    // const user = { username: 'toimc', password: '123456' } as User;
     // return this.userService.addUser();
     return this.userService.create(user);
   }
