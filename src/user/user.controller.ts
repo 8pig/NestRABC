@@ -48,6 +48,9 @@ export class UserController {
   }
   @Patch('/:id')
   updateUser(@Body() dto: any, @Param('id') id: number): any {
+    // 判断是否是自己
+    // 判断用户是否有更新user的权限
+    // 不能包含敏感信息
     const user = <User>dto;
     return this.userService.update(1, user);
   }
