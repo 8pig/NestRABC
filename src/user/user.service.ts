@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { Logs } from '../logs/logs.entity';
 import { IGetUserDTO } from './DTO/user.dto';
+import { conditionUtils } from '../utils/db.helper';
 
 @Injectable()
 export class UserService {
@@ -15,26 +16,17 @@ export class UserService {
   findAll(query: IGetUserDTO) {
     const { limit: take = 10, page, username, gender, role } = query;
     const skip = ((page || 1) - 1) * take;
+    const obj = {
+      'user.username': username,
+      'profile.gender': gender,
+      'roles.id': role,
+    };
     const qb = this.userRepository
       .createQueryBuilder('user')
       .innerJoinAndSelect('user.profile', 'profile')
       .innerJoinAndSelect('user.roles', 'roles');
-    if (username) {
-      qb.where('user.username = :username', { username });
-    } else {
-      qb.where('user.username IS NOT NULL');
-    }
-    if (gender) {
-      qb.where('profile.gender = :gender', { gender });
-    } else {
-      qb.where('profile.gender IS NOT NULL');
-    }
-    if (role) {
-      qb.where('roles.id = :role', { role });
-    } else {
-      qb.where('roles.id IS NOT NULL');
-    }
-    return qb.getMany();
+    const newQb = conditionUtils<User>(qb, obj);
+    return newQb.limit(take).skip(skip).getMany();
     // .where('user.username = :username', { username })
     // .andWhere('profile.gender = :gender', { gender })
     // .andWhere('roles.id = :role', { role })
