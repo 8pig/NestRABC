@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -76,7 +76,16 @@ export class UserService {
 
   async create(user: User) {
     const userTmp = await this.userRepository.create(user);
-    return this.userRepository.save(userTmp);
+
+    // try {
+    const res = await this.userRepository.save(userTmp);
+    return res;
+    // } catch (e) {
+    //   console.log(e);
+    //   if (e?.errno === 1062) {
+    //     throw new HttpException(e.sqlMessage, 500);
+    //   }
+    // }
   }
 
   async update(id: number, user: Partial<User>) {
