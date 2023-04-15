@@ -89,7 +89,11 @@ export class UserService {
   }
 
   async update(id: number, user: Partial<User>) {
-    return this.userRepository.update(id, user);
+    // return this.userRepository.update(id, user); 此方法只适合单表更新 不适合关联表更新
+    const userTem = await this.findProfile(id);
+    const newUser = this.userRepository.merge(userTem, user);
+    // 连表更新需要使用save 或者queryBuilder
+    return this.userRepository.save(newUser);
   }
 
   async remove(id: number) {
