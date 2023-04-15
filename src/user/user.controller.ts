@@ -10,6 +10,9 @@ import {
   UseFilters,
   Body,
   Param,
+  Headers,
+  HttpException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config';
@@ -47,13 +50,21 @@ export class UserController {
     return this.userService.create(user);
   }
   @Patch('/:id')
-  updateUser(@Body() dto: any, @Param('id') id: number): any {
-    console.log(dto);
-    // 判断是否是自己
-    // 判断用户是否有更新user的权限
-    // 不能包含敏感信息
-    const user = <User>dto;
-    return this.userService.update(id, user);
+  updateUser(
+    @Body() dto: any,
+    @Param('id') id: number,
+    @Headers('Authorization') Authorization: any,
+  ): any {
+    console.log('headers', Authorization);
+    if (id === Authorization) {
+      // 判断是否是自己
+      // 判断用户是否有更新user的权限
+      // 不能包含敏感信息
+      const user = <User>dto;
+      return this.userService.update(id, user);
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 
   @Delete('/:id')
