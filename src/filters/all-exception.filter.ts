@@ -8,7 +8,7 @@ import {
 import { ArgumentsHost, Catch } from '@nestjs/common';
 
 import * as requestIp from 'request-ip';
-import { QueryFailedError, TypeORMError } from 'typeorm';
+import { QueryFailedError } from 'typeorm';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
@@ -45,7 +45,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       error: msg,
     };
 
-    this.logger.error('[toimc]', responseBody);
+    this.logger.error('[err]', responseBody);
     httpAdapter.reply(response, responseBody, httpStatus);
   }
 }
