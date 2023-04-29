@@ -4,6 +4,7 @@ import {
   HttpException,
   Post,
   UseFilters,
+  UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { TypeormFilter } from '../filters/typeorm.filter';

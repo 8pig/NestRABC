@@ -13,6 +13,7 @@ import {
   Headers,
   HttpException,
   UnauthorizedException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config';
@@ -74,9 +75,9 @@ export class UserController {
   }
 
   @Get('/profile')
-  getUserProfile(@Query() query): any {
+  getUserProfile(@Query('id', ParseIntPipe) id: number): any {
     // username gender role profile sort
-    return this.userService.findProfile(2);
+    return this.userService.findProfile(id);
   }
 
   @Get('/logs')
