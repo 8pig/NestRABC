@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { Logs } from '../logs/logs.entity';
 import { IGetUserDTO } from './DTO/user.dto';
@@ -84,6 +84,13 @@ export class UserService {
         where: { id: 2 },
       });
       user.roles = [role];
+    }
+    if (user.roles instanceof Array && typeof user.roles[0] === 'number') {
+      user.roles = await this.rolesRepository.find({
+        where: {
+          id: In(user.roles),
+        },
+      });
     }
     const userTmp = await this.userRepository.create(user);
 
