@@ -33,14 +33,14 @@ export class AllExceptionFilter implements ExceptionFilter {
       msg = exception.message;
     }
     const responseBody = {
-      headers: request.headers,
-      query: request.query,
-      body: request.body,
-      params: request.params,
+      // headers: request.headers,
+      // query: request.query,
+      // body: request.body,
+      // params: request.params,
       timestamp: new Date().toISOString(),
       // 还可以加入一些用户信息
       // IP信息
-      ip: requestIp.getClientIp(request),
+      // ip: requestIp.getClientIp(request),
       exceptioin: exception['name'],
       error: msg,
     };

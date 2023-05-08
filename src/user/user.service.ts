@@ -78,7 +78,6 @@ export class UserService {
   }
 
   async create(user: Partial<User>) {
-    console.log(user);
     if (!user.roles) {
       const role = await this.rolesRepository.findOne({
         where: { id: 2 },

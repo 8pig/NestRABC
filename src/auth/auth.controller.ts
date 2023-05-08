@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { TypeormFilter } from '../filters/typeorm.filter';
+import { log } from 'console';
 
 @Controller('auth')
 @UseFilters(new TypeormFilter())

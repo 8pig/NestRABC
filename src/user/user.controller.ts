@@ -21,6 +21,8 @@ import { User } from './user.entity';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { IGetUserDTO } from './DTO/user.dto';
 import { TypeormFilter } from '../filters/typeorm.filter';
+import { CreateUserPipe } from './pipes/create-user/create-user.pipe';
+import { log } from 'console';
 
 @Controller('user')
 @UseFilters(new TypeormFilter())
@@ -44,16 +46,17 @@ export class UserController {
   }
 
   @Post()
-  addUser(@Body() user: User): any {
+  addUser(@Body(CreateUserPipe) user1: User): any {
+    log(111, user1);
     // todo 解析Body参数
     // const user = { username: 'toimc', password: '123456' } as User;
-    // return this.userService.addUser();
-    return this.userService.create(user);
+    return this.userService.create(user1);
   }
+
   @Patch('/:id')
   updateUser(
     @Body() dto: any,
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Headers('Authorization') Authorization: any,
   ): any {
     console.log('headers', Authorization);
@@ -69,7 +72,7 @@ export class UserController {
   }
 
   @Delete('/:id')
-  removeUser(@Param('id') id: number): any {
+  removeUser(@Param('id', ParseIntPipe) id: number): any {
     // todo 传递参数id
     return this.userService.remove(id);
   }
