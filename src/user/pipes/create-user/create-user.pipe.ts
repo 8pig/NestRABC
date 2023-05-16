@@ -1,5 +1,4 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
-import { log } from 'winston';
 
 @Injectable()
 export class CreateUserPipe implements PipeTransform {

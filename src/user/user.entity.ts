@@ -39,7 +39,9 @@ export class User {
   afterInsert() {
     console.log('afterinsert', this.id, this.username);
   }
-
+// 架构
+// 概念 
+// 易用性
   @AfterRemove()
   afterRemove() {
     console.log('after remove');

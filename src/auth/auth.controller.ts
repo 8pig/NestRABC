@@ -21,6 +21,7 @@ export class AuthController {
 
   @Post('/signup')
   signup(@Body() dto: any) {
+    console.log(dto);
     if (!dto.username || !dto.password) {
       throw new HttpException('用户名密码不得为空', 400);
     }
