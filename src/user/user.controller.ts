@@ -14,6 +14,8 @@ import {
   HttpException,
   UnauthorizedException,
   ParseIntPipe,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config';
@@ -23,6 +25,7 @@ import { IGetUserDTO } from './DTO/user.dto';
 import { TypeormFilter } from '../filters/typeorm.filter';
 import { CreateUserPipe } from './pipes/create-user/create-user.pipe';
 import { log } from 'console';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 @UseFilters(new TypeormFilter())
@@ -78,8 +81,10 @@ export class UserController {
   }
 
   @Get('/profile')
-  getUserProfile(@Query('id', ParseIntPipe) id: number): any {
+  @UseGuards(AuthGuard('jwt'))
+  getUserProfile(@Query('id', ParseIntPipe) id: number, @Req() req): any {
     // username gender role profile sort
+    console.log(req.user);
     return this.userService.findProfile(id);
   }
 
