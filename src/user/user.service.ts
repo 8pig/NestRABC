@@ -70,7 +70,10 @@ export class UserService {
   }
 
   find(username: string) {
-    return this.userRepository.findOne({ where: { username } });
+    return this.userRepository.findOne({
+      where: { username },
+      relations: ['roles'],
+    });
   }
 
   findOne(id: number) {
@@ -117,8 +120,8 @@ export class UserService {
     return this.userRepository.remove(user);
   }
 
-  findProfile(id: number) {
-    return this.userRepository.findOne({
+  async findProfile(id: number) {
+    return await this.userRepository.findOne({
       where: {
         id,
       },

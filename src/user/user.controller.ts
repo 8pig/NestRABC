@@ -26,9 +26,12 @@ import { TypeormFilter } from '../filters/typeorm.filter';
 import { CreateUserPipe } from './pipes/create-user/create-user.pipe';
 import { log } from 'console';
 import { AuthGuard } from '@nestjs/passport';
+import { AdminGuard } from '../guards/admin/admin.guard';
+import { JwtGuard } from '../guards/jwt/jwt.guard';
 
 @Controller('user')
 @UseFilters(new TypeormFilter())
+@UseGuards(JwtGuard)
 export class UserController {
   // private logger = new Logger(UserController.name);
 
@@ -81,10 +84,9 @@ export class UserController {
   }
 
   @Get('/profile')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AdminGuard)
   getUserProfile(@Query('id', ParseIntPipe) id: number, @Req() req): any {
     // username gender role profile sort
-    console.log(req.user);
     return this.userService.findProfile(id);
   }
 
