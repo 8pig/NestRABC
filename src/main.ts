@@ -7,7 +7,7 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { AllExceptionFilter } from './filters/all-exception.filter';
 
 async function bootstrap() {
@@ -21,6 +21,12 @@ async function bootstrap() {
   const httpAdapter = app.get(HttpAdapterHost);
   const logger = new Logger();
   app.useGlobalFilters(new AllExceptionFilter(logger, httpAdapter));
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
 
   const port = 3000;
   await app.listen(port);

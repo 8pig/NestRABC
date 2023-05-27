@@ -1,10 +1,12 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   HttpException,
   Post,
   UnauthorizedException,
   UseFilters,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -13,8 +15,10 @@ import { log } from 'console';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { use } from 'passport';
+import { SerializeInterceptor } from '../interceptors/serialize/serialize.interceptor';
 
 @Controller('auth')
+@UseInterceptors(ClassSerializerInterceptor)
 @UseFilters(new TypeormFilter())
 export class AuthController {
   constructor(
@@ -29,6 +33,7 @@ export class AuthController {
   }
 
   @Post('/signup')
+  @UseInterceptors(SerializeInterceptor)
   async signup(@Body() dto: any) {
     if (!dto.username || !dto.password) {
       throw new HttpException('用户名密码不得为空', 400);

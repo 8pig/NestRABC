@@ -12,7 +12,7 @@ import {
 import { Logs } from '../logs/logs.entity';
 import { Roles } from '../roles/roles.entity';
 import { Profile } from './profile.entity';
-
+import { Exclude } from 'class-transformer';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -22,6 +22,7 @@ export class User {
   username: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   // typescript -> 数据库 关联关系 Mapping
@@ -39,9 +40,9 @@ export class User {
   afterInsert() {
     console.log('afterinsert', this.id, this.username);
   }
-// 架构
-// 概念 
-// 易用性
+  // 架构
+  // 概念
+  // 易用性
   @AfterRemove()
   afterRemove() {
     console.log('after remove');
