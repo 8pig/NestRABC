@@ -18,6 +18,7 @@ import { use } from 'passport';
 import { Serialize } from '../decorators/serialize.decorator';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { SerializeInterceptor } from '../interceptors/serialize/serialize.interceptor';
+import { Expose } from 'class-transformer';
 
 class LoginDTO {
   @IsString()
@@ -26,6 +27,7 @@ class LoginDTO {
 
   @IsString()
   @IsNotEmpty()
+  @Expose()
   password: string;
 }
 
