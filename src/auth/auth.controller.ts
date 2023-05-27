@@ -15,7 +15,19 @@ import { log } from 'console';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { use } from 'passport';
+import { Serialize } from '../decorators/serialize.decorator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { SerializeInterceptor } from '../interceptors/serialize/serialize.interceptor';
+
+class LoginDTO {
+  @IsString()
+  @IsNotEmpty()
+  username: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -33,11 +45,8 @@ export class AuthController {
   }
 
   @Post('/signup')
-  @UseInterceptors(SerializeInterceptor)
+  // @UseInterceptors(SerializeInterceptor)
   async signup(@Body() dto: any) {
-    if (!dto.username || !dto.password) {
-      throw new HttpException('用户名密码不得为空', 400);
-    }
     return await this.authService.signup(dto.username, dto.password);
   }
 }
